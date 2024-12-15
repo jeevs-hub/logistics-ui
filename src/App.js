@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SidebarLayout from './layouts/SidebarLayout';
-import Logo from './components/Logo/Logo';
+import Logo from './components/logo/Logo';
 import { fetchMenuData } from './services/MenuService';
-import Drivers from './pages/Drivers/Drivers';
-import Home from './pages/Home/Home';
-import About from './pages/About/About';
-import Vehicles from './pages/Vehicles/Vehicles';
-import Error from './pages/Error/Error';
+import Drivers from './pages/drivers/Drivers';
+import Home from './pages/home/Home';
+import About from './pages/about/About';
+import Vehicles from './pages/vehicles/Vehicles';
+import Error from './pages/error/Error';
 
 import './App.css';
 

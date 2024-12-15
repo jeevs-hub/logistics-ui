@@ -1,5 +1,5 @@
 import React from 'react';
-import Sidebar from '../components/Sidebar/Sidebar';
+import Sidebar from '../components/sidebar/Sidebar';
 
 const SidebarLayout = ({ menu, children }) => {
     return (
