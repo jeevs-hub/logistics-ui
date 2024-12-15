@@ -7,8 +7,7 @@ const formatDriverData = (driverData) => driverData.map(driver => {
   let daysWorked = [];
 
   driver.traces.forEach(x => {
-    const dateString = x.date.endsWith('T00:00:00') ? x.date : `${x.date}T00:00:00Z`; // Ensure UTC time format
-    const date = new Date(dateString);
+    const date = new Date(`${x.date}T00:00:00Z`);// Ensure UTC time format
     //get the day as an index using monday as 0 tues as 1 etc.
     //default behaviour is sunday 0, mon 1 etc
     const dayOfWeek = (date.getUTCDay() + 6) % 7;
@@ -37,15 +36,17 @@ const fetchDriverData = async () => {
     return data;
 };
 
-const filterDriverData = async (name) => {
+const filterDriverData = async (filter) => {
     const dataService = createDataService();
 
     if (dataService === JsonDataService) {
         const allDrivers = await fetchDriverData();
-        return allDrivers.filter((driver) => driver.name.toLowerCase().includes(name.toLowerCase()));    
+        return allDrivers.filter((driver) => 
+            driver.name.toLowerCase().includes(filter.toLowerCase()) ||
+            driver.vehicleRegistration.toLowerCase().includes(filter.toLowerCase()));    
     }
 
-    return await dataService.fetchData(`drivers/${name}`);
+    return await dataService.fetchData(`drivers/${filter}`);
 };
   
 export {
