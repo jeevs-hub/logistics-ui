@@ -38,7 +38,8 @@ function App() {
           {menu.map((menuItem, idx) => {
             const Component = componentsMap[menuItem.title] ||  Error;
             return <Route key={idx} path={menuItem.url} element={<Component />} />
-          })}          
+          })}
+          <Route path="*" element={<Error />} />
         </Routes>
       </SidebarLayout>
       </div>
