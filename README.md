@@ -1,70 +1,77 @@
-# Getting Started with Create React App
+# React Application - Logistics
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This React application displays menu items and driver data. The drivers page contains full functionality, while other pages are mostly barebones with basic structure. Below is a summary of the setup and flow of data in the application.
 
-## Available Scripts
+## Prerequisites
 
-In the project directory, you can run:
+- **Node version**: v22.12.0
+- **NPM version**: 10.9.2
 
-### `npm start`
+The application was initially created using `npx create-react-app`, which provided the boilerplate structure. Apologies for the lingering files and assets that were not removed due to time constraints.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Environment Variables
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+In the `.env` file, you will find the following variables:
 
-### `npm test`
+- **`REACT_APP_LOGISTICS_API_URL`**: The URL where the backend C# application is running (the API that provides data for the application).
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **`REACT_APP_LOAD_DATA_FROM_API`**: A boolean flag. If this is set to **true**, the menu and driver data is fetched from the C# API. If it is **false**, the data is loaded from local JSON files in the `assets` directory.
 
-### `npm run build`
+## Data Fetching Flow
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+The flow of retrieving the menu and driver data is a bit more complicated because the data can be loaded from two different sources: the API or the local JSON files.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. **DataService Factory**: The `DriverService` and `MenuService` first call a `DataServiceFactory`, which determines which service should be used to fetch the data. Depending on the value of `REACT_APP_LOAD_DATA_FROM_API`, the factory will either use:
+   - **`ApiDataService`** to fetch data from the backend.
+   - **`JsonDataService`** to load data from the assets directory.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+2. **Processing and Formatting**:
+   - When data is fetched from the **`JsonDataService`**, the `DriverService` performs some additional processing and formatting of the data before it is returned to the `DriverComponent`. The backend API handles this processing when using the `ApiDataService`.
 
-### `npm run eject`
+3. **TimeZone Issue**:
+   - An issue was encountered with timezones. When loading the data from the JSON file, the dates were created incorrectly due to timezone conversion. Specifically, if the date was not processed as UTC, the date would be displayed as the previous day (e.g., February 1st was shown as January 31st). This has been addressed in the service, but it remains a bit complex.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Component and Service Structure
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Driver Component
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- The `DriverComponent` did require some refactoring but was left incomplete due to time constraints.
+- **Table Component**: Ideally, the table component should have been extracted into its own reusable component.
+- **Grouped Activities**: The way activities were grouped by day was quite complex, and this could have been further refactored to make the code cleaner and more maintainable.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Services
 
-## Learn More
+- **`ApiDataService`**: Responsible for fetching data from the backend API.
+- **`JsonDataService`**: Loads data from local JSON files stored in the `assets` directory.
+- **`DriverService`**: Contains the logic for formatting the driver data when loaded from the JSON file.
+- **`MenuService`**: Handles fetching menu data.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Service Logic
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- The **`DriverService`** formats the driver data if loaded from the JSON file, but the backend API automatically formats the data when using `ApiDataService`.
+- The date issue (timezone handling) is managed within the `DriverService` when using JSON data.
 
-### Code Splitting
+## Future Improvements
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+1. **Refactor `DriverComponent`**:
+   - The table logic should be refactored into a standalone component to reduce redundancy and improve maintainability.
+   
+2. **Simplify Grouping Logic**:
+   - The logic for grouping activities by day can be simplified to improve readability and performance.
 
-### Analyzing the Bundle Size
+3. **Remove Unnecessary Files**:
+   - There are still some files and assets from the `create-react-app` boilerplate that were not removed due to time constraints. These should be cleaned up in a future iteration.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
 
-### Making a Progressive Web App
+## Running the Application
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+To run the application, follow these steps:
 
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+2. Run:
+   ```bash
+   npm start
+   ```
