@@ -57,7 +57,10 @@ const Drivers = () => {
             <tr key={driver.id}>
               <td className='table-cell'>{driver.name}</td>
               <td className='table-cell'>{driver.vehicleRegistration}</td>
-              <td className='table-cell'>{driver.minsWorked}</td>
+              <td className='table-cell'>
+                {driver.minsWorked}<br/>
+              {Object.keys(driver.groupedActivityTimes).map((x, idx) => <span key={idx}>{`${x} = ${driver.groupedActivityTimes[x]}`}<br /></span>)}
+              </td>
               {
                 daysOfWeek.map((_, idx) => <td key={idx} className={'table-cell ' + (driver.daysWorked.includes(idx) && 'highlighted-cell')}></td>)
               }

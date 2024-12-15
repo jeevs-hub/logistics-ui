@@ -4,6 +4,7 @@ import JsonDataService from './JsonDataService';
 
 const formatDriverData = (driverData) => driverData.map(driver => {
   let minsWorked = 0;
+  let groupedActivityTimes = {};
   let daysWorked = [];
 
   driver.traces.forEach(x => {
@@ -13,6 +14,13 @@ const formatDriverData = (driverData) => driverData.map(driver => {
     const dayOfWeek = (date.getUTCDay() + 6) % 7;
     daysWorked.push(dayOfWeek);
     minsWorked += x.activity.reduce((total, act) => total + act.duration, 0);
+    x.activity.forEach(activity => {
+        if (!groupedActivityTimes[activity.type]) {
+            groupedActivityTimes[activity.type] = activity.duration;
+        } else {
+            groupedActivityTimes[activity.type] += activity.duration
+        }
+    })
   });
 
   return {
@@ -21,6 +29,7 @@ const formatDriverData = (driverData) => driverData.map(driver => {
     vehicleRegistration: driver.vehicleRegistration,
     minsWorked,
     daysWorked,
+    groupedActivityTimes,
   };
 });
 
