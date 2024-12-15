@@ -32,6 +32,7 @@ const Drivers = () => {
   }
 
   const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  const activities = ['Available', 'Drive', 'Work', 'Rest'];
 
   const onSearch = async (searchString) => {
     const filteredDrivers = await filterDriverData(searchString);
@@ -49,6 +50,7 @@ const Drivers = () => {
             <th scope="col">Name</th>
             <th scope="col">Vehicle Reg</th>
             <th scope="col">activity duration</th>
+            {activities.map((x, index)=> <th scope="col" key={index}>{x}</th>)}
             {daysOfWeek.map((x, index)=> <th scope="col" key={index}>{x.substring(0,3)}</th>)}
           </tr>
         </thead>
@@ -57,10 +59,17 @@ const Drivers = () => {
             <tr key={driver.id}>
               <td className='table-cell'>{driver.name}</td>
               <td className='table-cell'>{driver.vehicleRegistration}</td>
-              <td className='table-cell'>
-                {driver.minsWorked}<br/>
-              {Object.keys(driver.groupedActivityTimes).map((x, idx) => <span key={idx}>{`${x} = ${driver.groupedActivityTimes[x]}`}<br /></span>)}
-              </td>
+              <td className='table-cell'>{driver.minsWorked}</td>
+              {
+                activities.map(activity => {
+                  activity = activity.toLowerCase();
+                  var groupedActivityKey = Object.keys(driver.groupedActivityTimes).find(key => key.toLowerCase() === activity);
+                  if (!groupedActivityKey) {
+                    return <td>0</td>
+                  }
+                  return <td>{driver.groupedActivityTimes[groupedActivityKey]}</td>
+                })
+              }
               {
                 daysOfWeek.map((_, idx) => <td key={idx} className={'table-cell ' + (driver.daysWorked.includes(idx) && 'highlighted-cell')}></td>)
               }

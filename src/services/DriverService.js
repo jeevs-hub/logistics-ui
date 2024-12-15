@@ -7,14 +7,14 @@ const formatDriverData = (driverData) => driverData.map(driver => {
   let groupedActivityTimes = {};
   let daysWorked = [];
 
-  driver.traces.forEach(x => {
-    const date = new Date(`${x.date}T00:00:00Z`);// Ensure UTC time format
+  driver.traces.forEach(trace => {
+    const date = new Date(`${trace.date}T00:00:00Z`);// Ensure UTC time format
     //get the day as an index using monday as 0 tues as 1 etc.
     //default behaviour is sunday 0, mon 1 etc
     const dayOfWeek = (date.getUTCDay() + 6) % 7;
     daysWorked.push(dayOfWeek);
-    minsWorked += x.activity.reduce((total, act) => total + act.duration, 0);
-    x.activity.forEach(activity => {
+    trace.activity.forEach(activity => {
+        minsWorked += activity.duration;
         if (!groupedActivityTimes[activity.type]) {
             groupedActivityTimes[activity.type] = activity.duration;
         } else {
